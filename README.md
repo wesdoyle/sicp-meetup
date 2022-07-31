@@ -32,7 +32,7 @@ vagrant destroy
 
 ### vim
 
-The Vagrantfile copies a `~/.vimrc` files from your host environment to the VM and installed [vim-plug](https://github.com/junegunn/vim-plug).  If your vimrc contains directives to install your plugins via `Plug`, you can run `:PlugInstall` when first launching vim in the VM.
+The Vagrantfile copies a `~/.vimrc` file from your host environment to the VM and installs [vim-plug](https://github.com/junegunn/vim-plug).  If your vimrc contains directives to install your plugins via `Plug`, you can run `:PlugInstall` when first launching vim in the VM.
 
 ## Contributing
 
