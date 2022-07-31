@@ -1,1 +1,8 @@
 .vagrant
+*.ss~
+*.ss#*
+.#*.ss
+
+*.scm~
+*.scm#*
+.#*.scm
