@@ -16,6 +16,14 @@ To create the environment, run
 vagrant up
 ```
 
+Once provisioned, you can ssh into the local VM:
+
+```sh
+ssh -p 2222 vagrant@127.0.0.1
+```
+
+When prompted, use the password `vagrant`.
+
 To destroy the environment, run
 
 ```sh
