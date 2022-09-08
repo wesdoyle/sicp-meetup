@@ -1,35 +1,44 @@
-(display 43)
+;; Copied from sicp_files/scheme-utilities/demos.scm
+(define-syntax demonstrate
+  (syntax-rules ()
+    ((_ form) (begin
+                (display 'form)
+                (display " => ")
+                (display form)
+                (newline)))))
+
+(demonstrate 43)
 (newline)
 
-(display "Hello, world!\n")
+(demonstrate "Hello, world!\n")
 
-(display (+ 1 1))
+(demonstrate (+ 1 1))
 (newline)
 
-(display (+ 137 349))
+(demonstrate (+ 137 349))
 (newline)
 
-(display (* 5 99))
+(demonstrate (* 5 99))
 (newline)
 
-(display (/ 100 2))
+(demonstrate (/ 100 2))
 (newline)
 
-(display (+ 1 2 3 4))
+(demonstrate (+ 1 2 3 4))
 (newline)
 
-(display (* 1 2 3 4))
+(demonstrate (* 1 2 3 4))
 (newline)
 
 ;;nested combinations
 
-(display
+(demonstrate
   (+ (* 3 (+ (* 2 4) (+ 3 5))) (+ (- 10 7) 6))
 )
 ;;57
 (newline)
 
-(display
+(demonstrate
   (+ (* 3
       (+ (* 2 4)
          (+ 3 5)))
