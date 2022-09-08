@@ -1,6 +1,8 @@
 # Structure and Interpretation of Computer Programs Meetup
 
-This repository contains notes, examples, and local environment provisioning for following along with Abelson and Sussman's __Structure and Interpretation of Computer Programs__ text, available in the public domain at [this website](https://mitpress.mit.edu/sites/default/files/sicp/index.html), hosted by MIT.
+This repository contains notes, examples, and local environment provisioning for following along with Abelson and Sussman's __Structure and Interpretation of Computer Programs__ text, available in the public domain at ~[this website](https://mitpress.mit.edu/sites/default/files/sicp/index.html), hosted by MIT.~  
+
+The MIT-hosted SICP now appears to 404 at the above link.  The new site hosted by MIT uses JavaScript examples.  The best resource we're aware of reflecting the original text in Scheme is here, created by Li Xuanji: [https://xuanji.appspot.com/isicp/index.html](https://xuanji.appspot.com/isicp/index.html).
 
 The repo reflects working through the text at a twice-monthly Meetup hosted in Madison, WI in 2022.
 
