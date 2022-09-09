@@ -22,3 +22,25 @@
     (f 5)
 )
 (newline)
+
+;; Exercise 1.5
+
+(define (p) (p))
+
+(define (test x y)
+  (if (= x 0)
+      0
+      y))
+
+;; This will hang forever!
+ (display
+   (test 0 (p))
+ )
+
+;; This will also hang forever!
+ (display
+   (test 1 (p))
+ )
+
+ (display '...')
+
