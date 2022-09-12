@@ -37,7 +37,7 @@ and the shape of the process it generates (Figure 1.3):
 (* 6 120)
 720
 #+end_src
-/Check out an interactive demo [[file:~/projects/open-source/sicp-meetup/sicp-files/meetup_02/recursive_and_iterative_processes.scm][here]]/
+/Check out an interactive demo [[file:../meetup_02/recursive_and_iterative_processes.scm][here]]/
 
 The chain of computations grows linearly with =n=, which makes this a /linear recursive process/
 *** Linear Iterative Processes
@@ -70,7 +70,7 @@ and the shape of the process it generates (Figure 1.4):
 (fact-iter 720 7 6)
 720
 #+end_src
-/Check out an interactive demo [[file:~/projects/open-source/sicp-meetup/sicp-files/meetup_02/recursive_and_iterative_processes.scm][here]]/
+/Check out an interactive demo [[file:../meetup_02/recursive_and_iterative_processes.scm][here]]/
 
 #+RESULTS:
 : 720
