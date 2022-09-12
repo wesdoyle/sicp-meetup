@@ -1,0 +1,84 @@
+#+title:
+
+* 1.2 Procedures and the Processes They Generate
+The focus of this chapter is to explain different types of processes, their shapes, and how to visualize them.
+
+** 1.2.1 Linear Recursion and Iteration
+Consider the difference between two implementations of a procedure that computes the factorial of a number:
+
+*** Linear Recursive Processes
+As a recursive process follows its sequence of steps, it builds a chain of /deferred computations/---this can be visualized as expanding. Once the process has generated all of the deferred computations for its sequence of steps, those computations can be realized---this can be visualized as contracting. The entire state of the process is stored by the interpreter (probably in the stack) in the chain of deferred computations---it takes up more space as the chain grows.
+
+Consider the recursive definition of factorial:
+#+begin_src scheme
+(define (factorial n)
+  (if (= n 1)
+      1
+      (* n (factorial (- n 1)))))
+
+(factorial 6)
+#+end_src
+
+#+RESULTS:
+: 720
+
+and the shape of the process it generates (Figure 1.3):
+#+begin_src scheme
+(factorial 6)
+(* 6 (factorial 5))
+(* 6 (* 5 (factorial 4)))
+(* 6 (* 5 (* 4 (factorial 3))))
+(* 6 (* 5 (* 4 (* 3 (factorial 2)))))
+(* 6 (* 5 (* 4 (* 3 (* 2 (factorial 1))))))
+(* 6 (* 5 (* 4 (* 3 (* 2 1)))))
+(* 6 (* 5 (* 4 (* 3 2))))
+(* 6 (* 5 (* 4 6)))
+(* 6 (* 5 24))
+(* 6 120)
+720
+#+end_src
+/Check out an interactive demo [[file:~/projects/open-source/sicp-meetup/sicp-files/meetup_02/recursive_and_iterative_processes.scm][here]]/
+
+The chain of computations grows linearly with =n=, which makes this a /linear recursive process/
+*** Linear Iterative Processes
+In contrast with recursive processes, iterative processes do /not/ build up chains of deferred computation. An iterative process maintains a fixed number of /state variables/ that provide a complete description of the state of the process at its current step. Its shape is flat from beginning to end. Because the interpreter doesn't hold on to any hidden state at each step in the process, it can run in constant space.
+
+Consider the iterative definition of factorial:
+#+begin_src scheme
+(define (factorial n)
+  (fact-iter 1 1 n))
+
+(define (fact-iter product counter n)
+  (if (> counter n) ; note the use of n as a
+      product
+      (fact-iter (* counter product)
+                 (+ counter 1)
+                 n)))
+
+(factorial 6)
+#+end_src
+
+and the shape of the process it generates (Figure 1.4):
+#+begin_src scheme
+(factorial 6)
+(fact-iter   1 1 6)
+(fact-iter   1 2 6)
+(fact-iter   2 3 6)
+(fact-iter   6 4 6)
+(fact-iter  24 5 6)
+(fact-iter 120 6 6)
+(fact-iter 720 7 6)
+720
+#+end_src
+/Check out an interactive demo [[file:~/projects/open-source/sicp-meetup/sicp-files/meetup_02/recursive_and_iterative_processes.scm][here]]/
+
+#+RESULTS:
+: 720
+
+*** A Note on the Distinction Between Recursive Procedures and Recursive Processes
+Although the iterative version of =factorial= calls itself (making it a recursive /procedure/), it computes the factorial using an /iterative/ process. The first example is an example of a recursive procedure /and/ a recursive process.
+** 1.2.2 Tree Recursion
+** 1.2.3 Orders of Growth
+** 1.2.4 Exponentiation
+** 1.2.5 Greatest Common Divisors
+** 1.2.6 Example: Testing for Primality
