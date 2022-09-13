@@ -103,7 +103,34 @@ A tree recursive process is one which calls itself multiple times at each level.
 *Note:* the book calls out the above as a quite inefficient implementation (note the redundant computations in figure 1.5) and provides an example implemented as an iterative procedure that is much more efficient. It is, however, useful for visualizing a simple, tree recursive process. Some problems are much more naturally suited to and/or efficiently-calculated using tree recursion.
 
 *** Example: Counting Change
+The book posits the following procedure as an elegant (though inefficient) implementation of a tree recursive process for counting the number of ways to calculate change for $1
 
+#+begin_src scheme
+(define (count-change amount)
+  (cc amount 5))
+
+(define (cc amount kinds-of-coins)
+  (cond ((= amount 0) 1)
+        ((or (< amount 0) (= kinds-of-coins 0)) 0)
+        (else (+ (cc amount
+                     (- kinds-of-coins 1))
+                 (cc (- amount
+                        (first-denomination kinds-of-coins))
+                     kinds-of-coins)))))
+
+(define (first-denomination kinds-of-coins)
+  (cond ((= kinds-of-coins 1) 1)
+        ((= kinds-of-coins 2) 5)
+        ((= kinds-of-coins 3) 10)
+        ((= kinds-of-coins 4) 25)
+        ((= kinds-of-coins 5) 50)))
+
+(count-change 100)
+;; => 292
+#+end_src
+
+#+RESULTS:
+: 292
 
 ** 1.2.3 Orders of Growth
 ** 1.2.4 Exponentiation
