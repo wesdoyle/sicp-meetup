@@ -17,6 +17,7 @@ Consider the recursive definition of factorial:
       (* n (factorial (- n 1)))))
 
 (factorial 6)
+;; => 720
 #+end_src
 
 #+RESULTS:
@@ -56,6 +57,7 @@ Consider the iterative definition of factorial:
                  n)))
 
 (factorial 6)
+;; => 720
 #+end_src
 
 and the shape of the process it generates (Figure 1.4):
