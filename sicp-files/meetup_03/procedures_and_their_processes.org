@@ -133,6 +133,12 @@ The book posits the following procedure as an elegant (though inefficient) imple
 : 292
 
 ** 1.2.3 Orders of Growth
+This section defines a mathematical model with which the space and time requirements of a process may be crudely described.
+
+/TODO: is this essentially Big O?/
 ** 1.2.4 Exponentiation
+This section discusses a few implementations of an exponentiation proceduce (ie. ~(expt 2 4)~ == 2^2) and the characteristics of their orders of growth in time and space
 ** 1.2.5 Greatest Common Divisors
+This section describes an iterative process for determining the greatest common divisor (GCD) of two integers
 ** 1.2.6 Example: Testing for Primality
+This section describes two procedures for determining an integer's primality
