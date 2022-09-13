@@ -83,6 +83,27 @@ Although the iterative version of =factorial= calls itself (making it a recursiv
 In many languages, an iterative process cannot be properly represented as a recursive procedure; the memory usage of any recursive procedure will grow with the number of procedure calls. Instead, they contain special constructs to execute iterative processes: for, while, do, repeat, etc. Other languages---like Scheme---do not have this limitation. Iterative processes implemented using recursive procedures execute in constant space. The language feature that allows for this is [[https://en.wikipedia.org/wiki/Tail_call][tail call]] optimization.
 
 ** 1.2.2 Tree Recursion
+A tree recursive process is one which calls itself multiple times at each level. It can be visualized as a tree. See figure 1.5 in SICP for a tree visualization of the following tree recursive definition of a procedure for computing Fibonacci numbers
+
+#+begin_src scheme
+(define (fib n)
+  (cond
+   ((= n 0) 0)
+   ((= n 1) 1)
+   (else (+ (fib (- n 1))
+            (fib (- n 2))))))
+
+(fib 5)
+;; => 5
+#+end_src
+
+#+RESULTS:
+: 5
+
+**Note:** the book calls out the above as a quite inefficient implementation (note the redundant computations in figure 1.5) and provides an example implemented as an iterative procedure that is much more efficient. It is, however, useful for visualizing a simple, tree recursive process. Some problems are much more naturally suited to and/or efficiently-calculated using tree recursion.
+
+*** Example: Counting Change
+
 
 ** 1.2.3 Orders of Growth
 ** 1.2.4 Exponentiation
