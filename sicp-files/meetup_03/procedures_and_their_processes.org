@@ -40,7 +40,7 @@ and the shape of the process it generates (Figure 1.3):
 #+end_src
 /Check out an interactive demo [[file:../meetup_02/recursive_and_iterative_processes.scm][here]]/
 
-The chain of computations grows linearly with =n=, which makes this a /linear recursive process/
+The chain of computations grows linearly with ~n~, which makes this a /linear recursive process/
 *** Linear Iterative Processes
 In contrast with recursive processes, iterative processes do /not/ build up chains of deferred computation. An iterative process maintains a fixed number of /state variables/ that provide a complete description of the state of the process at its current step. Its shape is flat from beginning to end.
 
@@ -78,7 +78,7 @@ and the shape of the process it generates (Figure 1.4):
 : 720
 
 *** A Note on the Distinction Between Recursive Procedures and Recursive Processes
-Although the iterative version of =factorial= calls itself (making it a recursive /procedure/), it computes the factorial using an /iterative/ process. The first example is an example of a recursive procedure /and/ a recursive process.
+Although the iterative version of ~factorial~ calls itself (making it a recursive /procedure/), it computes the factorial using an /iterative/ process. The first example is an example of a recursive procedure /and/ a recursive process.
 
 In many languages, an iterative process cannot be properly represented as a recursive procedure; the memory usage of any recursive procedure will grow with the number of procedure calls. Instead, they contain special constructs to execute iterative processes: for, while, do, repeat, etc. Other languages---like Scheme---do not have this limitation. Iterative processes implemented using recursive procedures execute in constant space. The language feature that allows for this is [[https://en.wikipedia.org/wiki/Tail_call][tail call]] optimization.
 
@@ -100,7 +100,7 @@ A tree recursive process is one which calls itself multiple times at each level.
 #+RESULTS:
 : 5
 
-**Note:** the book calls out the above as a quite inefficient implementation (note the redundant computations in figure 1.5) and provides an example implemented as an iterative procedure that is much more efficient. It is, however, useful for visualizing a simple, tree recursive process. Some problems are much more naturally suited to and/or efficiently-calculated using tree recursion.
+*Note:* the book calls out the above as a quite inefficient implementation (note the redundant computations in figure 1.5) and provides an example implemented as an iterative procedure that is much more efficient. It is, however, useful for visualizing a simple, tree recursive process. Some problems are much more naturally suited to and/or efficiently-calculated using tree recursion.
 
 *** Example: Counting Change
 
