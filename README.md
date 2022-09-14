@@ -12,12 +12,19 @@ The repo reflects working through the text at a twice-monthly Meetup hosted in M
 SICP uses the Scheme programming language.
 
 #### Implementations
-Scheme goes by many names. Any implementation that's R5RS-compatible and has a `load` procedure should be usable. Consider using one of the following:
+Scheme goes by many names. The language specification is small, so available features vary between implementations. Any implementation that's R5RS+ compatible should be able to run most of the examples in SICP, though adaptations may be necessary. We will attempt to address these if/when we encounter imcompatibilities throughout the course of the book. Consider using one of the following:
 
-- [Racket](https://racket-lang.org/), with [#lang sicp](https://docs.racket-lang.org/sicp-manual/index.html). Comes with its own IDE: ([DrRacket](https://docs.racket-lang.org/drracket/index.html)). Native builds for Apple Silicon.
-- [Guile](https://www.gnu.org/software/guile/). Should be fully compatible with examples used in SICP. Native builds for Apple Silicon.
-- [mit-scheme](https://www.gnu.org/software/mit-scheme/). Recommended, as this is the implementation most commonly used with SICP. Not compiled for macOS ARM, so if you're on Apple Silicon, it's necessary to run the x86_64 version through Rosetta.
+- [Guile](https://www.gnu.org/software/guile/) 🍎: Should be compatible with examples provided by SICP. This is the primary implementation used by Wes and Jacob. Reference [this documenation](https://www.gnu.org/software/guile/manual/html_node/Loading-Readline-Support.html) to enable a nicer REPL experience with completion, history, command line editing, etc.
+- [Racket](https://racket-lang.org/), with [#lang sicp](https://docs.racket-lang.org/sicp-manual/index.html) 🍎: Comes with its own IDE: ([DrRacket](https://docs.racket-lang.org/drracket/index.html)). An implementation of the picture language used in SICP is available [here](https://docs.racket-lang.org/sicp-manual/SICP_Picture_Language.html)
+- [Chicken](https://call-cc.org/) 🍎: An implementation of R5RS and R7RS Scheme that has a large library of practical extensions called [Eggs](http://eggs.call-cc.org/5/). Egg are available for
+  - [SRFI-203](https://srfi.schemers.org/srfi-203/srfi-203.html): a picture language in the style of the one used in SICP.
+  - [SRFI-216](https://srfi.schemers.org/srfi-216/srfi-216.html): an SICP prerequisites library that aims to smooth over incompatibility of some SICP examples with modern Scheme
+- [mit-scheme](https://www.gnu.org/software/mit-scheme/): Commonly used Scheme implementation
   The [Vagrant](#Vagrant) environment described below may be used to run mit-scheme.
+
+_An 🍎 denotes native Apple Silicon support_.
+
+All of the implementations listed above should be available for Linux and macOS (with or without native arm64 support). They are likely available for Windows, too---reach out to Jacob or Wes if you need help finding a suitable Scheme implementation on Windows.
 
 #### Vagrant
 
@@ -60,18 +67,21 @@ Lisps are best written with a REPL at hand. It's even better when code can be se
 The quintessential Lisp ~~operating system~~ editor. [Geiser](http://geiser.nongnu.org/) provides interactive Scheme development support for Emacs.
 
 If you're new to Emacs and want an easy way to get started, it's recommended to use an Emacs distribution:
+
 - [Doom Emacs](https://github.com/doomemacs/doomemacs) is great for those who want Vim-flavored Emacs.
+- [Spacemacs](https://www.spacemacs.org/) is another Emacs distribution with Vim-centric bindings and an opinionated "layer" system for functionality.
 - [Prelude](https://github.com/bbatsov/prelude) provides a more traditional, but potentially easier to use Emacs experience.
 
-Both provide pre-configured Geiser modules.
+All of the above offer interactive Scheme functionality with Geiser pre-configured.
 
+If you're new to Emacs and are _not_ using a Vim/Evil keybinding configutation, [cua mode](https://www.emacswiki.org/emacs/CuaMode) may make Emacs more approachable with by enabling the common `Ctrl-C`, `Ctrl-V`, etc. keyboard shortcuts.
 
 #### DrRacket (w/ Racket)
 [DrRacket](https://docs.racket-lang.org/drracket/index.html) is the IDE that comes with the [Racket](https://racket-lang.org/) programming language
 
 #### Editors without REPL Support
 
-If your chosen editor doesn't have REPL support, the REPL can be used from the command line.
+If your chosen editor doesn't have REPL support, the REPL can be used from the command line. Depending on your chosen Scheme implementation, you may be able to call the `load` procedure to load the procedure definitions in a Scheme file to call them interactively. Most Scheme implementations (like Guile) also allow execution of a Scheme file as a script.
 
 ## Contributing
 
