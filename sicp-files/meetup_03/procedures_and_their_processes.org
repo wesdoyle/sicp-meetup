@@ -143,7 +143,7 @@ The specific values of =k1= and =k2= aren't necessarily important---what's signi
 Considering again the computation of the factorial of =x=, both the recursive and iterative implementations have an order of growth of =Θ(n)= in the number of steps required. The number of steps to computed the factorial is proportional to =x= (they are _linear_ processes). The memory requirements, however, have different orders of growth for the two implementations. The space of recursive process grows with =Θ(n)=, whereas the space of the iterative process grows with =Θ(1)= (space is constant).
 
 ** 1.2.4 Exponentiation
-This section discusses a few implementations of an exponentiation proceduce (ie. ~(expt 2 4)~ == 2^2) and the characteristics of their orders of growth in time and space
+This section discusses a few implementations of an exponentiation proceduce (ie. ~(expt 2 4)~ == 2^4) and the characteristics of their orders of growth in time and space
 ** 1.2.5 Greatest Common Divisors
 This section describes an iterative process for determining the greatest common divisor (GCD) of two integers
 ** 1.2.6 Example: Testing for Primality
