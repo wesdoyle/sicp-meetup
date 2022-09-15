@@ -1,0 +1,150 @@
+#+title:
+
+* 1.2 Procedures and the Processes They Generate
+The focus of this chapter is to explain different types of processes, their shapes, and how to visualize them.
+
+** 1.2.1 Linear Recursion and Iteration
+Consider the difference between two implementations of a procedure that computes the factorial of a number:
+
+*** Linear Recursive Processes
+As a recursive process follows its sequence of steps, it builds a chain of /deferred computations/---this can be visualized as expanding. Once the process has generated all of the deferred computations for its sequence of steps, those computations can be realized---this can be visualized as contracting. The entire state of the process is stored by the interpreter (probably in the stack) in the chain of deferred computations---it takes up more space as the chain grows.
+
+Consider the recursive definition of factorial:
+#+begin_src scheme
+(define (factorial n)
+  (if (= n 1)
+      1
+      (* n (factorial (- n 1)))))
+
+(factorial 6)
+;; => 720
+#+end_src
+
+#+RESULTS:
+: 720
+
+and the shape of the process it generates (Figure 1.3):
+#+begin_src scheme
+(factorial 6)
+(* 6 (factorial 5))
+(* 6 (* 5 (factorial 4)))
+(* 6 (* 5 (* 4 (factorial 3))))
+(* 6 (* 5 (* 4 (* 3 (factorial 2)))))
+(* 6 (* 5 (* 4 (* 3 (* 2 (factorial 1))))))
+(* 6 (* 5 (* 4 (* 3 (* 2 1)))))
+(* 6 (* 5 (* 4 (* 3 2))))
+(* 6 (* 5 (* 4 6)))
+(* 6 (* 5 24))
+(* 6 120)
+720
+#+end_src
+/Check out an interactive demo [[file:../meetup_02/recursive_and_iterative_processes.scm][here]]/
+
+The chain of computations grows linearly with ~n~, which makes this a /linear recursive process/
+*** Linear Iterative Processes
+In contrast with recursive processes, iterative processes do /not/ build up chains of deferred computation. An iterative process maintains a fixed number of /state variables/ that provide a complete description of the state of the process at its current step. Its shape is flat from beginning to end.
+
+Consider the iterative definition of factorial:
+#+begin_src scheme
+(define (factorial n)
+  (fact-iter 1 1 n))
+
+(define (fact-iter product counter n)
+  (if (> counter n) ; note the use of n as a
+      product
+      (fact-iter (* counter product)
+                 (+ counter 1)
+                 n)))
+
+(factorial 6)
+;; => 720
+#+end_src
+
+and the shape of the process it generates (Figure 1.4):
+#+begin_src scheme
+(factorial 6)
+(fact-iter   1 1 6)
+(fact-iter   1 2 6)
+(fact-iter   2 3 6)
+(fact-iter   6 4 6)
+(fact-iter  24 5 6)
+(fact-iter 120 6 6)
+(fact-iter 720 7 6)
+720
+#+end_src
+/Check out an interactive demo [[file:../meetup_02/recursive_and_iterative_processes.scm][here]]/
+
+#+RESULTS:
+: 720
+
+*** A Note on the Distinction Between Recursive Procedures and Recursive Processes
+Although the iterative version of ~factorial~ calls itself (making it a recursive /procedure/), it computes the factorial using an /iterative/ process. The first example is an example of a recursive procedure /and/ a recursive process.
+
+In many languages, an iterative process cannot be properly represented as a recursive procedure; the memory usage of any recursive procedure will grow with the number of procedure calls as it would in a linear recursive process. Instead, they contain special constructs to execute iterative processes: for, while, do, repeat, etc. Other languages---like Scheme---do not have this limitation. Iterative processes implemented using recursive procedures execute in constant space. The language feature that allows for this is [[https://en.wikipedia.org/wiki/Tail_call][tail call]] optimization.
+
+** 1.2.2 Tree Recursion
+A tree recursive process is one which calls itself multiple times at each level. It can be visualized as a tree. See figure 1.5 in SICP for a tree visualization of the following tree recursive definition of a procedure for computing Fibonacci numbers
+
+#+begin_src scheme
+(define (fib n)
+  (cond ((= n 0) 0)
+        ((= n 1) 1)
+        (else (+ (fib (- n 1))
+                 (fib (- n 2))))))
+
+(fib 5)
+;; => 5
+#+end_src
+
+#+RESULTS:
+: 5
+
+*Note:* the book calls out the above as a quite inefficient implementation (note the redundant computations in figure 1.5) and provides an example implemented as an iterative procedure that is much more efficient. It is, however, useful for visualizing a simple, tree recursive process. Some problems are much more naturally suited to and/or efficiently-calculated using tree recursion.
+
+*** Example: Counting Change
+The book posits the following procedure as an elegant (though inefficient) implementation of a tree recursive process for counting the number of ways to calculate change for $1
+
+#+begin_src scheme
+(define (count-change amount)
+  (cc amount 5))
+
+(define (cc amount kinds-of-coins)
+  (cond ((= amount 0) 1)
+        ((or (< amount 0) (= kinds-of-coins 0)) 0)
+        (else (+ (cc amount
+                     (- kinds-of-coins 1))
+                 (cc (- amount
+                        (first-denomination kinds-of-coins))
+                     kinds-of-coins)))))
+
+(define (first-denomination kinds-of-coins)
+  (cond ((= kinds-of-coins 1) 1)
+        ((= kinds-of-coins 2) 5)
+        ((= kinds-of-coins 3) 10)
+        ((= kinds-of-coins 4) 25)
+        ((= kinds-of-coins 5) 50)))
+
+(count-change 100)
+;; => 292
+#+end_src
+
+#+RESULTS:
+: 292
+
+** 1.2.3 Orders of Growth
+This section defines a mathematical model with which wan crudely describe the space and time requirements of a process.
+
+Consider =n= to be a parameter that measures the size of a problem. For example: if computing the factorial of an integer =x= using one of the processes described earlier, =n= would be =x=. =R(n)= represents the amount of resources a process with a size of =n= requires. =R(n)= can represent different measurements; it could measure either the number of steps in a process or the amount of memory that process takes depending on the value of =n=.
+
+=R(n)= can be said to have an order of growth of =Θ(f(n))= when there are exist positive constants =k1= and =k2= such that =k1 * f(n) <​= R(n) <​= k2 * f(n)= for any sufficiently large value of n.
+
+The specific values of =k1= and =k2= aren't necessarily important---what's significant is that =R(n)= is bound on both sides by =f(n)=. It might make more sense in the context of Big-O and Big-Omega. =O(f(n))= describes the upper bound of a process's time/space requirements---it says nothing about its lower bound (best case). =Ω(fn(n))= describes the lower bound of a process's time/space requirements---it says nothing about its upper bound (worst case). =R(n)= (or =Θ(f(n))=) is like a combination of both, then---=f(n)= constrains both the lower and upper bounds (best and worst case).
+
+Considering again the computation of the factorial of =x=, both the recursive and iterative implementations have an order of growth of =Θ(n)= in the number of steps required. The number of steps to computed the factorial is proportional to =x= (they are _linear_ processes). The memory requirements, however, have different orders of growth for the two implementations. The space of recursive process grows with =Θ(n)=, whereas the space of the iterative process grows with =Θ(1)= (space is constant).
+
+** 1.2.4 Exponentiation
+This section discusses a few implementations of an exponentiation proceduce (ie. ~(expt 2 4)~ == 2^4) and the characteristics of their orders of growth in time and space
+** 1.2.5 Greatest Common Divisors
+This section describes an iterative process for determining the greatest common divisor (GCD) of two integers
+** 1.2.6 Example: Testing for Primality
+This section describes two procedures for determining an integer's primality
