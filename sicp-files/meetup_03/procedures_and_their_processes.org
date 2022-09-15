@@ -87,11 +87,10 @@ A tree recursive process is one which calls itself multiple times at each level.
 
 #+begin_src scheme
 (define (fib n)
-  (cond
-   ((= n 0) 0)
-   ((= n 1) 1)
-   (else (+ (fib (- n 1))
-            (fib (- n 2))))))
+  (cond ((= n 0) 0)
+        ((= n 1) 1)
+        (else (+ (fib (- n 1))
+                 (fib (- n 2))))))
 
 (fib 5)
 ;; => 5
@@ -133,9 +132,16 @@ The book posits the following procedure as an elegant (though inefficient) imple
 : 292
 
 ** 1.2.3 Orders of Growth
-This section defines a mathematical model with which the space and time requirements of a process may be crudely described.
+This section defines a mathematical model with which wan crudely describe the space and time requirements of a process.
 
-/TODO: is this essentially Big O?/
+Consider =n= to be a parameter that measures the size of a problem. For example: if computing the factorial of an integer =x= using one of the processes described earlier, =n= would be =x=. =R(n)= represents the amount of resources a process with a size of =n= requires. =R(n)= can represent different measurements; it could measure either the number of steps in a process or the amount of memory that process takes depending on the value of =n=.
+
+=R(n)= can be said to have an order of growth of =Θ(f(n))= when there are exist positive constants =k1= and =k2= such that =k1 * f(n) <​= R(n) <​= k2 * f(n)= for any sufficiently large value of n.
+
+The specific values of =k1= and =k2= aren't necessarily important---what's significant is that =R(n)= is bound on both sides by =f(n)=. It might make more sense in the context of Big-O and Big-Omega. =O(f(n))= describes the upper bound of a process's time/space requirements---it says nothing about its lower bound (best case). =Ω(fn(n))= describes the lower bound of a process's time/space requirements---it says nothing about its upper bound (worst case). =R(n)= (or =Θ(f(n))=) is like a combination of both, then---=f(n)= constrains both the lower and upper bounds (best and worst case).
+
+Considering again the computation of the factorial of =x=, both the recursive and iterative implementations have an order of growth of =Θ(n)= in the number of steps required. The number of steps to computed the factorial is proportional to =x= (they are _linear_ processes). The memory requirements, however, have different orders of growth for the two implementations. The space of recursive process grows with =Θ(n)=, whereas the space of the iterative process grows with =Θ(1)= (space is constant).
+
 ** 1.2.4 Exponentiation
 This section discusses a few implementations of an exponentiation proceduce (ie. ~(expt 2 4)~ == 2^2) and the characteristics of their orders of growth in time and space
 ** 1.2.5 Greatest Common Divisors
