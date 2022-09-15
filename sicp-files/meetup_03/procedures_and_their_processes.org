@@ -132,7 +132,7 @@ The book posits the following procedure as an elegant (though inefficient) imple
 : 292
 
 ** 1.2.3 Orders of Growth
-This section defines a mathematical model with which wan crudely describe the space and time requirements of a process.
+This section defines a mathematical model with which we can crudely describe the space and time requirements of a process.
 
 Consider =n= to be a parameter that measures the size of a problem. For example: if computing the factorial of an integer =x= using one of the processes described earlier, =n= would be =x=. =R(n)= represents the amount of resources a process with a size of =n= requires. =R(n)= can represent different measurements; it could measure either the number of steps in a process or the amount of memory that process takes depending on the value of =n=.
 
