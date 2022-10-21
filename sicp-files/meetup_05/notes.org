@@ -38,14 +38,45 @@ Like any expression whose value is a procedure, a procedure created using =lambd
 : 12
 
 * Using let to create local variables
-As a side effect of lambda's ability to be used as the operator in a combination, they can also be used as a way to create local variables:
+As a side effect of their ability to be used as the operator in a combination, lambda expressions can also be used to create local variables:
 #+begin_src scheme
 (define (f x y)
-  ((lambda (a b)
+  ((lambda (a b) ;; a and b are names scoped to the body of the procedure produced by lambda
      (+ (* x (square a))
         (* y b)
         (* a b)))
-   (+ 1 (* x y))
-   (- 1 y)))
+   ;; arguments to the lambda
+   (+ 1 (* x y)) ;; the value of `a` in the lambda body
+   (- 1 y))) ;; the value of `b` in the lambda body
 #+end_src
 [[file:local_vars_with_lambda.png]]
+
+The =let= special form is a more convenient way to use this pattern:
+#+begin_src scheme
+(define (f x y)
+  (let ((a (+ 1 (* x y))) ;; the names of local variables and their values are colocated
+        (b (- y 1)))
+    (+ (* x (square a))
+        (* y b)
+        (* a b))))
+#+end_src
+
+=let= is just syntactic sugar for the lambda pattern in the first example, which means it doesn't require the interpreter to implement any additional constructs to support it. In fact, one of the cool things about Scheme and other lisps is the ability to define new syntax from existing primitives using macros; we can define our own =let=:
+
+#+begin_src scheme
+(define-macro (our-let bindings . body)
+  `((lambda ,(map car bindings)
+      ,@body)
+    ,@(map cadr bindings)))
+
+(our-let ((a 1)
+          (b 2))
+ (+ a b))
+
+;; 3
+#+end_src
+
+#+RESULTS:
+: 3
+
+*NOTE*: Macros aren't used much in SICP, so it isn't important to fully understand the =our-let= example. There's an interesting parallel here, though! Like procedures abstract compound operations (consisting of primitive operations or other procedures), high-level language constructs like =let= abstract /other language constructs/.
