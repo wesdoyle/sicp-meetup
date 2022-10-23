@@ -80,3 +80,61 @@ The =let= special form is a more convenient way to use this pattern:
 : 3
 
 *NOTE*: Macros aren't used much in SICP, so it isn't important to fully understand the =our-let= example. There's an interesting parallel here, though! Like procedures abstract compound operations (consisting of primitive operations or other procedures), high-level language constructs like =let= abstract /other language constructs/.
+* Chapter 2: Building Abstractions with Data
+In the first chapter, we've focused on simple data (numbers) and procedure; chapter 2 introduces more complex, /compound/ data structures.
+
+#+begin_quote
+Why do we want compound data in a programming language? For the same reasons that we want compound procedures: to elevate the conceptual level at which we can design our programs, to increase the modularity of our designs, and to enhance the expressive power of our language.
+#+end_quote
+
+
+** Rational numbers
+We can conceptualize a rational number as a pair of two numbers: a numerator and a denominator. Conveniently, Scheme provides a primitive data structure—the /pair/—that we can use to represent these. At minimum, our mini language for working with rational numbers must be comprised of a few procedures that act as a convential /interface/ to the rational number data structure: =make-rat=, =numer= (getter for a rational number's numerator), and =denom= (getter for a rational number's denominator)
+
+Example implementation using the /pair/ data structure:
+#+begin_src scheme
+(define (make-rat n d)
+  (cons n d))
+
+(define (numer rat)
+  (car rat))
+
+(define (denom rat)
+  (cdr rat))
+#+end_src
+
+*NOTE*: =cons= is the pair constructor. It takes two arguments: the first is the first member of the pair; the second argument is the second member of the pair. The first member of a pair can be access by passing the pair to the =car= procedure. The second member of a pair can be accessed by using the =cdr= procedure.
+
+Given these basic procedures for interacting with our basic data structure for rational numbers, we can define further operations: addition, subtraction, multiplication, division, and equality:
+#+begin_src scheme
+(define (make-rat n d)
+  (cons n d))
+
+(define (numer rat)
+  (car rat))
+
+(define (denom rat)
+  (cdr rat))
+
+(define (add-rat x y)
+  (make-rat (+ (* (numer x) (denom y))
+               (+ (numer y) (denom x)))
+            (* (denom x) (denom y))))
+
+(define (sub-rat x y)
+  (make-rat (- (* (numer x) (denom y))
+               (+ (numer y) (denom x)))
+            (* (denom x) (denom y))))
+
+(define (mul-rat x y)
+  (make-rat (* (numer x) (numer y))
+            (* (denom x) (denom y))))
+
+(define (div-rat x y)
+  (make-rat (* (numer x) (denom y))
+            (* (denom x) (numer y))))
+
+(define (equal-rat? x y)
+  (= (* (numer x) (denom y))
+     (* (numer y) (denom x))))
+#+end_src
