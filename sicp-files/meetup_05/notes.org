@@ -236,7 +236,7 @@ Alternatively, this reduction could happen inside of the =numer= and =denom= sel
 While there are tradeoffs for one implementation over the other, the important part in regards to our rational number language is that the observed behavior does not change.
 
 [[file:abstraction_boundaries.svg]]
-[[https://sarabander.github.io/sicp/html/2_002e1.xhtml#g_t2_002e1_002e2][(Source]])
+([[https://sarabander.github.io/sicp/html/2_002e1.xhtml#g_t2_002e1_002e2][Source]])
 
 #+begin_quote
 The horizontal lines represent abstraction barriers that isolate different “levels” of the system. At each level, the barrier separates the programs (above) that use the data abstraction from the programs (below) that implement the data abstraction. Programs that use rational numbers manipulate them solely in terms of the procedures supplied “for public use” by the rational-number package: add-rat, sub-rat, mul-rat, div-rat, and equal-rat?.
