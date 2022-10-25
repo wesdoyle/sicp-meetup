@@ -147,3 +147,98 @@ We can define a procedure to more easily visualize our rational number represent
   (display "/")
   (display (denom rat)))
 #+end_src
+
+See =code.scm= for examples of working with rational numbers
+
+*** Abstraction Boundaries
+As of now, none of the operations in our rational number language reduce fractions. For example: =(add-rat (make-rat 1 4) (make-rat 1 4))= produces =8/16=.
+
+One possible solution would be to reduce when the number is created:
+#+begin_src scheme
+(define (gcd a b)
+  (if (= b 0)
+      a
+      (gcd b (remainder a b))))
+
+(define (make-rat n d)
+  (let ((g (gcd n d)))
+    (cons (/ n g)
+          (/ d g))))
+
+;; redefined for the sake of org-babel
+(define (numer rat)
+  (car rat))
+
+(define (denom rat)
+  (cdr rat))
+
+(define (add-rat x y)
+  (make-rat (+ (* (numer x) (denom y))
+               (* (numer y) (denom x)))
+            (* (denom x) (denom y))))
+
+(define (print-rat rat)
+  (display (numer rat))
+  (display "/")
+  (display (denom rat))
+  (newline))
+
+(with-output-to-string
+  (lambda ()
+    (print-rat
+     (add-rat (make-rat 1 4) (make-rat 1 4)))))
+;; => 1/2
+#+end_src
+
+#+RESULTS:
+: 1/2\n
+
+Alternatively, this reduction could happen inside of the =numer= and =denom= selectors:
+
+#+begin_src scheme
+(define (gcd a b)
+  (if (= b 0)
+      a
+      (gcd b (remainder a b))))
+
+(define (make-rat n d)
+  (cons n d))
+
+(define (numer x)
+  (let ((g (gcd (car x) (cdr x))))
+    (/ (car x) g)))
+
+(define (denom x)
+  (let ((g (gcd (car x) (cdr x))))
+    (/ (cdr x) g)))
+
+(define (add-rat x y)
+  (make-rat (+ (* (numer x) (denom y))
+               (* (numer y) (denom x)))
+            (* (denom x) (denom y))))
+
+(define (print-rat rat)
+  (display (numer rat))
+  (display "/")
+  (display (denom rat))
+  (newline))
+
+(with-output-to-string
+  (lambda ()
+    (print-rat
+     (add-rat (make-rat 1 4) (make-rat 1 4)))))
+;; 1/2
+#+end_src
+
+#+RESULTS:
+: 1/2\n
+
+While there are tradeoffs for one implementation over the other, the important part in regards to our rational number language is that the observed behavior does not change.
+
+[[file:abstraction_boundaries.svg]]
+
+#+begin_quote
+The horizontal lines represent abstraction barriers that isolate different “levels” of the system. At each level, the barrier separates the programs (above) that use the data abstraction from the programs (below) that implement the data abstraction. Programs that use rational numbers manipulate them solely in terms of the procedures supplied “for public use” by the rational-number package: add-rat, sub-rat, mul-rat, div-rat, and equal-rat?.
+#+end_quote
+
+In terms of more commonly used languages, =make-rat=, =numer=, =denom=, etc, act as the public /interface/ to the rational number data-type—the underlying representations/implementations don't matter so long as the behavior is the same.
