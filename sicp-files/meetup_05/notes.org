@@ -138,3 +138,12 @@ Given these basic procedures for interacting with our basic data structure for r
   (= (* (numer x) (denom y))
      (* (numer y) (denom x))))
 #+end_src
+
+We can define a procedure to more easily visualize our rational number representation:
+#+begin_src scheme
+(define (print-rat rat)
+  (newline)
+  (display (numer rat))
+  (display "/")
+  (display (denom rat)))
+#+end_src
