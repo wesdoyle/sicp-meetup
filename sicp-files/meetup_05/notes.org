@@ -103,7 +103,7 @@ Example implementation using the /pair/ data structure:
   (cdr rat))
 #+end_src
 
-*NOTE*: =cons= is the pair constructor. It takes two arguments: the first is the first member of the pair; the second argument is the second member of the pair. The first member of a pair can be access by passing the pair to the =car= procedure. The second member of a pair can be accessed by using the =cdr= procedure.
+*NOTE*: =cons= is the pair constructor. It takes two arguments: the first is the first member of the pair; the second argument is the second member of the pair. The first member of a pair can be accessed by passing the pair to the =car= procedure. The second member of a pair can be accessed by using the =cdr= procedure.
 
 Given these basic procedures for interacting with our basic data structure for rational numbers, we can define further operations: addition, subtraction, multiplication, division, and equality:
 #+begin_src scheme
