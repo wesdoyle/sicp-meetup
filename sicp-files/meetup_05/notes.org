@@ -118,12 +118,12 @@ Given these basic procedures for interacting with our basic data structure for r
 
 (define (add-rat x y)
   (make-rat (+ (* (numer x) (denom y))
-               (+ (numer y) (denom x)))
+               (* (numer y) (denom x)))
             (* (denom x) (denom y))))
 
 (define (sub-rat x y)
   (make-rat (- (* (numer x) (denom y))
-               (+ (numer y) (denom x)))
+               (* (numer y) (denom x)))
             (* (denom x) (denom y))))
 
 (define (mul-rat x y)
