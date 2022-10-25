@@ -89,7 +89,7 @@ Why do we want compound data in a programming language? For the same reasons tha
 
 
 ** Rational numbers
-We can conceptualize a rational number as a pair of two numbers: a numerator and a denominator. Conveniently, Scheme provides a primitive data structure—the /pair/—that we can use to represent these. At minimum, our mini language for working with rational numbers must be comprised of a few procedures that act as a convential /interface/ to the rational number data structure: =make-rat=, =numer= (getter for a rational number's numerator), and =denom= (getter for a rational number's denominator)
+We can conceptualize a rational number as a pair of two numbers: a numerator and a denominator. Conveniently, Scheme provides a primitive data structure—the /pair/ — that we can use to represent these. At minimum, our mini language for working with rational numbers must be comprised of a few procedures that act as a convential /interface/ to the rational number data structure: =make-rat=, =numer= (getter for a rational number's numerator), and =denom= (getter for a rational number's denominator)
 
 Example implementation using the /pair/ data structure:
 #+begin_src scheme
