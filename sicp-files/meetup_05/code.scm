@@ -57,9 +57,11 @@
 (define (show-rat rat)
   "Outputs the result of `print-rat' as a string"
   ;; `parameterize' is how you interact with dynamic variables in Scheme.
-  ;; In this case, it overrides `current-output-port' with the port returned
-  ;; by `current-output-string' -- we can than grab the output as a string
-  ;; using `get-output-string'
+  ;; In this case, it overrides `current-output-port' (the port to which
+  ;; display writes by default) with the port returned by
+  ;; `open-output-string'. -- we can then grab the output as a
+  ;; string from that port using `get-output-string'.
+  ;; More info about ports: https://scheme.com/tspl4/io.html
   (parameterize ((current-output-port (open-output-string)))
     (print-rat rat)
     (get-output-string (current-output-port))))
