@@ -85,3 +85,6 @@
 
 (demonstrate
  (show-rat (add-rat one-third one-third)))
+
+(demonstrate
+  (equal-rat? (make-rat 1 5) (make-rat 4 20)))
