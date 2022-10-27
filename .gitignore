@@ -6,3 +6,4 @@
 *.scm~
 *.scm#*
 .#*.scm
+.DS_Store
