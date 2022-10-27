@@ -37,6 +37,51 @@ Like any expression whose value is a procedure, a procedure created using =lambd
 #+RESULTS:
 : 12
 
+Procedures can create other procedures using lambda. Here, we define a =make-adder= procedure—it takes a single number =x= and returns a procedure that takes a single number =y= and adds =x= to =y=:
+#+begin_src scheme :results output
+(define (make-adder x)
+  (lambda (y)
+    (+ x y)))
+
+(define inc (make-adder 1))
+(define dec (make-adder -1))
+
+(define add-5 (make-adder 5))
+(define add-9000 (make-adder 9000))
+
+(define-syntax demonstrate
+  (syntax-rules ()
+    ((_ form) (begin
+                (display 'form)
+                (display " => ")
+                (display form)
+                (newline)))))
+
+(demonstrate (inc 1))
+;; (inc 1) => 2
+
+(demonstrate (dec 1))
+;; (dec 1) => 0
+
+(demonstrate (add-5 37))
+;; (add-5 37) => 42
+
+(demonstrate (add-9000 1))
+;; (add-9000 1) => 9001
+
+(demonstrate (make-adder 1))
+;; (make-adder 1) => #<procedure 1047529c0 at <unknown port>:8:2 (y)>
+#+end_src
+
+#+RESULTS:
+: (inc 1) => 2
+: (dec 1) => 0
+: (add-5 37) => 42
+: (add-9000 1) => 9001
+: (make-adder 1) => #<procedure 102962600 at <unknown port>:8:2 (y)>
+
+This is a trivial example, but it gives us a taste of the power that lambda gives us. The ability for procedures to access variables from the scope in which they're defined is the =closure= property. There are some really cool examples in later chapters that cover the concept.
+
 * Using let to create local variables
 As a side effect of their ability to be used as the operator in a combination, lambda expressions can also be used to create local variables:
 #+begin_src scheme
@@ -154,7 +199,7 @@ See =code.scm= for examples of working with rational numbers
 As of now, none of the operations in our rational number language reduce fractions. For example: =(add-rat (make-rat 1 4) (make-rat 1 4))= produces =8/16=.
 
 One possible solution would be to reduce when the number is created:
-#+begin_src scheme
+#+begin_src scheme :results output
 (define (gcd a b)
   (if (= b 0)
       a
@@ -183,19 +228,17 @@ One possible solution would be to reduce when the number is created:
   (display (denom rat))
   (newline))
 
-(with-output-to-string
-  (lambda ()
-    (print-rat
-     (add-rat (make-rat 1 4) (make-rat 1 4)))))
+(print-rat
+ (add-rat (make-rat 1 4) (make-rat 1 4)))
 ;; => 1/2
 #+end_src
 
 #+RESULTS:
-: 1/2\n
+: 1/2
 
 Alternatively, this reduction could happen inside of the =numer= and =denom= selectors:
 
-#+begin_src scheme
+#+begin_src scheme :results output
 (define (gcd a b)
   (if (= b 0)
       a
@@ -223,15 +266,13 @@ Alternatively, this reduction could happen inside of the =numer= and =denom= sel
   (display (denom rat))
   (newline))
 
-(with-output-to-string
-  (lambda ()
-    (print-rat
-     (add-rat (make-rat 1 4) (make-rat 1 4)))))
+(print-rat
+ (add-rat (make-rat 1 4) (make-rat 1 4)))
 ;; 1/2
 #+end_src
 
 #+RESULTS:
-: 1/2\n
+: 1/2
 
 While there are tradeoffs for one implementation over the other, the important part in regards to our rational number language is that the observed behavior does not change.
 
