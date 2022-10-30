@@ -128,7 +128,7 @@ Procedures can create other procedures using lambda. Here, we define a =make-add
 : (add-9000 1) => 9001
 : (make-adder 1) => #<procedure 102962600 at <unknown port>:8:2 (y)>
 
-This is a trivial example, but it gives us a taste of the power that lambda gives us. The ability for procedures to access variables from the scope in which they're defined is the =closure= property. There are some really cool examples in later chapters that cover the concept.
+This is a trivial example, but it gives us a taste of the power that lambda gives us. The ability for procedures to access variables from the scope in which they're defined is +the  =closure= property. There are some really cool examples in later chapters that cover the concept+ (edit: the =closure= property is a an unrelated concept that will be discussed later. the example here uses a different definition of =closure= related to the behavior of free variables in procedures. it will not be discuessed in SICP, but it _is_ important to how many things work in Scheme).
 * Chapter 2: Building Abstractions with Data
 In the first chapter, we've focused on simple data (numbers) and procedure; chapter 2 introduces more complex, /compound/ data structures.
 
