@@ -51,7 +51,7 @@ That's one of my favorite examples in the book!
 
 For performance purposes, it is likely that a given Scheme implementation will implement the pair data type more directly, but because these procedures satisfy pair's conditions, it /could/ be implemented this way.
 
-**NOTE:** That we can use procedures as data objects lets us use them to represent compound data. The style of programming used in this is example is called /message passing/. =cons= returns an object (represented by a procedure) that accepts two different "messages", =0= and =1=. It responds to those messages by returning the relevant element of the pair. This is likely familiar to those who are accustomed to the object-oriented paradigm and demonstrates the power of first-class procedures/functions. We'll come across this style again in chapter 3, when SICP discusses "modelling and simulation" and stateful objects.
+*NOTE:* That we can use procedures as data objects lets us use them to represent compound data. The style of programming used in this is example is called /message passing/. =cons= returns an object (represented by a procedure) that accepts two different "messages", =0= and =1=. It responds to those messages by returning the relevant element of the pair. This is likely familiar to those who are accustomed to the object-oriented paradigm and demonstrates the power of first-class procedures/functions. We'll come across this style again in chapter 3, when SICP discusses "modelling and simulation" and stateful objects.
 
 ** Selected Exercises
 *** 2.4
@@ -109,3 +109,114 @@ Church numerals
 
 #+RESULTS:
 : 2
+* 2.2 Hierarchical Data and the Closure Property
+The /pair/ primitive that we've interacted with in the last few sections can act as a glue with which we can build more complicated compound data structures. Pairs can not only contain numbers like
+#+begin_src scheme :results output
+(display (cons 1 2))
+;; => (1 . 2)
+;; The above is a common visualization for pairs
+#+end_src
+
+#+RESULTS:
+: (1 . 2)
+
+but also other pairs:
+
+#+begin_src scheme :results output
+(display (cons (cons 1 2)
+               (cons 3 4)))
+;; => ((1 . 2) 3 . 4)
+;; For reasons I do not know, Guile outputs the above. I would expect something more like
+;; ((1 . 2) . (3 . 4))
+#+end_src
+
+#+RESULTS:
+: ((1 . 2) 3 . 4)
+
+The ability for a pair to contain other pairs is called the /closure property/ of cons. SICP defines the /closure property/, more generally, as follows:
+#+begin_quote
+In general, an operation for combining data objects satisfies the closure property if the results of combining things with that operation can themselves be combined using the same operation.
+#+end_quote
+
+#+begin_quote
+Closure is the key to power in any means of combination because it permits us to create hierarchical structures—structures made up of parts, which themselves are made up of parts, and so on.
+
+From the outset of Chapter 1, we’ve made essential use of closure in dealing with procedures, because all but the very simplest programs rely on the fact that the elements of a combination can themselves be combinations. In this section, we take up the consequences of closure for compound data.
+#+end_quote
+
+*NOTE:* /Closure/ in this context refers to a *different* concept than you may be familiar with in languages with lexical scope and first-class functions/procedures (Scheme, JavaScript, Python, etc.) where a function "closes over" variables in its outer scope. SICP doesn't discuss that kind of closure (at least not using the /word/ "closure"), so assume that any mention of "closure" going forward refers to the former definition relating to nested combinations.
+
+** 2.2.1 Representing Sequences
+One of the useful structures that we can create with =cons= pairs is the /sequence/: an ordered collection of data objects. One straightforward and common sequence that can be built using pairs is the /list/ (specifically, the singley-linked-list). Side note: this structure is where the original LISP got its name— LISt Processing.
+
+In a list built using pairs, the =car= of the pair (first element) is the value data object at that point in the list. The =cdr= points at the next pair, which contains a data element, points at another pair, and so on. The end of a list is a pair whose =cdr= is =nil=.
+
+#+begin_src scheme :results output
+(display
+ (cons 1
+       (cons 2
+             (cons 3
+                   (cons 4
+                         ;; the book uses the name actual name `nil', but that's been removed from the
+                         ;; Scheme standard. The empty list '() is the standard representation of nil.
+                         ;; More info: web.archive.org/web/20070808004043/http://wiki.wordaligned.org/sicp/published/FrequentlyAskedQuestions
+                         '())))))
+;; => (1 2 3 4)
+#+end_src
+
+#+RESULTS:
+: (1 2 3 4)
+
+We can also construct the above sequence using the =list= procedure:
+#+begin_src scheme :results output
+(display (list 1 2 3 4))
+;; => (1 2 3 4)
+#+end_src
+
+#+RESULTS:
+: (1 2 3 4)
+
+The list is such a central data structure in Scheme that there's a special representation... in fact it's the same representation as the syntax we write to make combinations
+
+*NOTE:* attempting to evaluate the list as represented above—(1 2 3 4)-however, will signal an error as it attempts to apply =1= as a procedure to the arguments =2 3 4=. In section 2.3, we'll see a way to deal with this using /quotation/. That'll also help use understand the empty list syntax representing =nil=, ='()= in the earlier example of building a list using =cons=.
+
+The following examples show how =car= and =cdr= can be used to access elements in a list:
+
+#+begin_src scheme :results output
+(define-syntax demonstrate
+  (syntax-rules ()
+    ((_ form) (begin
+                (display 'form)
+                (display " => ")
+                (display form)
+                (newline)))))(define one-through-four (list 1 2 3 4))
+
+;; car gets the first element of the list
+(demonstrate (car one-through-four))
+;; => 1
+
+;; cdr gets the list, excluding the first element
+(demonstrate (cdr one-through-four))
+;; => (2 3 4)
+
+;; combining car and cdr lets us access values at different points in the list
+(demonstrate (car (cdr one-through-four)))
+;; => 2
+
+;; cons prepends an element to the list
+(demonstrate (cons 10 one-through-four))
+;; => (10 1 2 3 4)
+
+;; but cons does not mutate the list. when we prepended 10 before, we actually created a new list consisting of the original list, with 10 at the start
+(demonstrate (cons 5 one-through-four))
+;; => (5 1 2 3 4)
+#+end_src
+
+#+RESULTS:
+: (car one-through-four) => 1
+: (cdr one-through-four) => (2 3 4)
+: (car (cdr one-through-four)) => 2
+: (cons 10 one-through-four) => (10 1 2 3 4)
+: (cons 5 one-through-four) => (5 1 2 3 4)
+
+*** List Operations
