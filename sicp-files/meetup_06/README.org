@@ -1,0 +1,111 @@
+#+title: Meetup 6
+
+* 2.1.3 What is meant by data?
+SICP defines /data/ as a collection of selectors and constructors combined with specific conditions that those procedures must fulfill in order to be a valid representation.
+
+Using the rational number example from the previous section, our rational data type is defined by the constructor =make-rat= and the selectors =numer= and =denom=. To constitute a valid representation of a ration number, given that =x= is =(make-rat n d)= where =n= is any integer and =d= is any non-zero integer, =(numer x)= is =n= and =(denom x)= is =d=.
+
+This also holds for lower-level data structures as well, like the /pair/. The pair constructor is =cons= and the objects that the pair glues together can be retrieved using =car= and =cdr=. In order for these operations to constitute a valid pair representation, any objects =x= and =y=, if =z= is =(cons x y)= then =(car z)= is =x= and =(cdr z)= is =y=.
+
+As discussed in [[org:../projects/open-source/sicp-meetup/sicp-files/meetup_05/README.org][Abstraction Barriers]] (TODO: link to the actual section), the underlying implementation of some data structure doesn't matter, so long as its constructors and selectors satisfy its conditions. In fact, we can implement the pair and its operations using /only procedures/:
+
+#+begin_src scheme :results output
+(define-syntax demonstrate
+  (syntax-rules ()
+    ((_ form) (begin
+                (display 'form)
+                (display " => ")
+                (display form)
+                (newline)))))
+
+(define (cons x y)
+  (define (dispatch m)
+    (case m
+      ((0) x)
+      ((1) y)
+      (else (error "Argument not 0 or 1:
+                   CONS" m))))
+  dispatch)
+
+(define (car z) (z 0))
+(define (cdr z) (z 1))
+
+(define x (cons 1 2))
+
+(demonstrate x)
+;; x => #<procedure dispatch (m)>
+
+(demonstrate (car x))
+;; (car x) => 1
+
+(demonstrate (cdr x))
+;; (cdr x) => 2
+#+end_src
+
+#+RESULTS:
+: x => #<procedure dispatch (m)>
+: (car x) => 1
+: (cdr x) => 2
+
+That's one of my favorite examples in the book!
+
+For performance purposes, it is likely that a given Scheme implementation will implement the pair data type more directly, but because these procedures satisfy pair's conditions, it /could/ be implemented this way.
+
+**NOTE:** That we can use procedures as data objects lets us use them to represent compound data. The style of programming used in this is example is called /message passing/. =cons= returns an object (represented by a procedure) that accepts two different "messages", =0= and =1=. It responds to those messages by returning the relevant element of the pair. This is likely familiar to those who are accustomed to the object-oriented paradigm and demonstrates the power of first-class procedures/functions. We'll come across this style again in chapter 3, when SICP discusses "modelling and simulation" and stateful objects.
+
+** Selected Exercises
+*** 2.4
+An alternative procedural representation of the pair data type:
+#+begin_src scheme :results output
+(define-syntax demonstrate
+  (syntax-rules ()
+    ((_ form) (begin
+                (display 'form)
+                (display " => ")
+                (display form)
+                (newline)))))
+
+(define (cons x y)
+  (lambda (f) (f x y)))
+
+(define (car z)
+  (z (lambda (a b) a)))
+
+(define (cdr z)
+  (z (lambda (a b) b)))
+
+(define x (cons 1 2))
+
+(demonstrate x)
+;; x => #<procedure 1031b3220 at <unknown port>:16:2 (m)>
+
+(demonstrate (car x))
+;; (car x) => 1
+
+(demonstrate (cdr x))
+;; (cdr x) => 2
+#+end_src
+
+#+RESULTS:
+: x => #<procedure 102cf6200 at <unknown port>:16:2 (f)>
+: (car x) => 1
+: (cdr x) => 2
+*** 2.6
+Church numerals
+#+begin_src scheme
+(define zero (lambda (f) (lambda (x) x)))
+
+(define (add-1 n)
+  (lambda (f) (lambda (x) (f ((n f) x)))))
+
+;; (add-1 zero)
+(define one
+  (lambda (f) (lambda (x) (f x))))
+
+(define (inc n) (+ 1 n))
+
+(((add-1 one) inc) 0)
+#+end_src
+
+#+RESULTS:
+: 2
