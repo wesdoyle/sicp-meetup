@@ -212,13 +212,6 @@ The following examples show how =car= and =cdr= can be used to access elements i
 ;; => (5 1 2 3 4)
 #+end_src
 
-#+RESULTS:
-: (car one-through-four) => 1
-: (cdr one-through-four) => (2 3 4)
-: (car (cdr one-through-four)) => 2
-: (cons 10 one-through-four) => (10 1 2 3 4)
-: (cons 5 one-through-four) => (5 1 2 3 4)
-
 *** List Operations
 There are some common patterns for working with lists
 
@@ -271,7 +264,67 @@ It's common to cdr down an entire list. The =null?= procedure returns =#t= (true
 (newline)
 #+end_src
 
+Another technique is to "cons up" a list while cdring down another list, as in this implementation of an =append= procedure:
+
+#+begin_src scheme :results output
+(define (append list1 list2)
+  (if (null? list1)
+      list2
+      (cons (car list1)
+            (append (cdr list1)
+                    list2))))
+
+(display (append (list 1 2 3) (list 4 5 6)))
+;; => (1 2 3 4 5 6)
+#+end_src
+
 #+RESULTS:
-: 0
-: 3
-: 5
+: (1 2 3 4 5 6)
+
+*** Selected Exercises
+**** 2.17
+#+begin_quote
+Define a procedure last-pair that returns the list that contains only the last element of a given (nonempty) list:
+
+(last-pair (list 23 72 149 34))
+(34)
+#+end_quote
+
+#+begin_src scheme :results output
+(define (last-pair items)
+  ;; Because a list is a chain of cons cells terminated by/nil an empty list, if the cdr of a pair
+  ;; is empty, then we're looking at the last one
+  (if (null? (cdr items))
+      items
+      (last-pair (cdr items))))
+
+(display (last-pair (list 23 72 149 34)))
+;; => (34)
+#+end_src
+
+#+RESULTS:
+: (34)
+
+**** 2.18
+#+begin_quote
+Define a procedure reverse that takes a list as argument and returns a list of the same elements in reverse order:
+
+(reverse (list 1 4 9 16 25))
+(25 16 9 4 1)
+#+end_quote
+
+#+begin_src scheme :results output
+(define (reverse items)
+  (define (reverse-iter res items*)
+    (if (null? items*)
+        res
+        (reverse-iter (cons (car items*) res)
+                      (cdr items*))))
+  (reverse-iter (list) items))
+
+(display (reverse (list 1 4 9 16 25)))
+
+#+end_src
+
+#+RESULTS:
+: (25 16 9 4 1)
