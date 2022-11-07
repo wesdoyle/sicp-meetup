@@ -220,3 +220,58 @@ The following examples show how =car= and =cdr= can be used to access elements i
 : (cons 5 one-through-four) => (5 1 2 3 4)
 
 *** List Operations
+There are some common patterns for working with lists
+
+One is "cdr"ing down the list to visit each item. Consider this example, which cdrs down the list to retrieve the item at the given (zero-based) index:
+
+#+begin_src scheme :results output
+(define (list-ref items n)
+  (if (= n 0)
+      (car items)
+      (list-ref (cdr items) (- n 1))))
+
+(define one-to-three (list 1 2 3))
+
+(display (list-ref one-to-three 0))
+;; => 1
+(newline)
+
+(display (list-ref one-to-three 1))
+;; => 2
+(newline)
+
+(display (list-ref one-to-three 2))
+;; => 3
+(newline)
+#+end_src
+
+#+RESULTS:
+: 1
+: 2
+: 3
+
+It's common to cdr down an entire list. The =null?= procedure returns =#t= (true) when its argument—which should be a list—is empty. The following example computes the length of a list recursively cdring down the given list, with a check for =null?= as the terminal condition:
+
+#+begin_src scheme :results output
+(define (length items)
+  (if (null? items)
+      0
+      (+ 1 (length (cdr items)))))
+
+(display (length (list)))
+;; => 0
+(newline)
+
+(display (length (list 1 2 3)))
+;; => 3
+(newline)
+
+(display (length (list 2 4 6 8 10)))
+;; => 5
+(newline)
+#+end_src
+
+#+RESULTS:
+: 0
+: 3
+: 5
