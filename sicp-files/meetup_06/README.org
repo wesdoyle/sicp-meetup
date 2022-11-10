@@ -90,6 +90,7 @@ An alternative procedural representation of the pair data type:
 : x => #<procedure 102cf6200 at <unknown port>:16:2 (f)>
 : (car x) => 1
 : (cdr x) => 2
+
 *** 2.6
 Church numerals
 #+begin_src scheme
@@ -109,6 +110,7 @@ Church numerals
 
 #+RESULTS:
 : 2
+
 * 2.2 Hierarchical Data and the Closure Property
 The /pair/ primitive that we've interacted with in the last few sections can act as a glue with which we can build more complicated compound data structures. Pairs can not only contain numbers like
 #+begin_src scheme :results output
