@@ -53,8 +53,7 @@ For performance purposes, it is likely that a given Scheme implementation will i
 
 *NOTE:* That we can use procedures as data objects lets us use them to represent compound data. The style of programming used in this is example is called /message passing/. =cons= returns an object (represented by a procedure) that accepts two different "messages", =0= and =1=. It responds to those messages by returning the relevant element of the pair. This is likely familiar to those who are accustomed to the object-oriented paradigm and demonstrates the power of first-class procedures/functions. We'll come across this style again in chapter 3, when SICP discusses "modelling and simulation" and stateful objects.
 
-** Selected Exercises
-*** 2.4
+** Exercise 2.4
 An alternative procedural representation of the pair data type:
 #+begin_src scheme :results output
 (define-syntax demonstrate
@@ -90,26 +89,6 @@ An alternative procedural representation of the pair data type:
 : x => #<procedure 102cf6200 at <unknown port>:16:2 (f)>
 : (car x) => 1
 : (cdr x) => 2
-
-*** 2.6
-Church numerals
-#+begin_src scheme
-(define zero (lambda (f) (lambda (x) x)))
-
-(define (add-1 n)
-  (lambda (f) (lambda (x) (f ((n f) x)))))
-
-;; (add-1 zero)
-(define one
-  (lambda (f) (lambda (x) (f x))))
-
-(define (inc n) (+ 1 n))
-
-(((add-1 one) inc) 0)
-#+end_src
-
-#+RESULTS:
-: 2
 
 * 2.2 Hierarchical Data and the Closure Property
 The /pair/ primitive that we've interacted with in the last few sections can act as a glue with which we can build more complicated compound data structures. Pairs can not only contain numbers like
