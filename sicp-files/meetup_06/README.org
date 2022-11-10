@@ -465,6 +465,7 @@ Here are two different definitions of square-list. Complete both of them by fill
 #+begin_quote
 Louis Reasoner tries to rewrite the first square-list procedure of Exercise 2.21 so that it evolves an iterative process:
 #+end_quote
+
 #+begin_src scheme
 (define (square-list items)
   (define (iter things answer)
@@ -512,6 +513,7 @@ The result is reversed because each item is consed onto the answer list, rather 
 #+begin_quote
 Louis then tries to fix his bug by interchanging the arguments to cons:
 #+end_quote
+
 #+begin_src scheme
 (define (square-list items)
   (define (iter things answer)
