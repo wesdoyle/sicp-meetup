@@ -462,6 +462,7 @@ Here are two different definitions of square-list. Complete both of them by fill
 : (1 4 9 16)
 : (1 4 9 16)
 ***** 2.22
+
 #+begin_quote
 Louis Reasoner tries to rewrite the first square-list procedure of Exercise 2.21 so that it evolves an iterative process:
 #+end_quote
