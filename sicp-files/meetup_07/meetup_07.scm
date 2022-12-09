@@ -33,8 +33,8 @@
 
 (define x (cons (list 1 2) (list 3 4)))
 
-;; (demonstrate (length x))
-;; (demonstrate (count-leaves x))
+(demonstrate (length x))
+(demonstrate (count-leaves x))
 
 ;; 2.27 Deep Reverse
 
@@ -47,14 +47,22 @@
         (rev-imp (cdr items) (cons (car items) result)))) 
   (rev-imp items nil))
 
+(define (reverse2 items)
+  (define (reverse-iter res items*)
+    (if (null? items*)
+        res
+        (reverse-iter (cons (car items*) res)
+                      (cdr items*))))
+  (reverse-iter (list) items))
+
 (define (deep-reverse t) 
   (if (pair? t) 
       (reverse (map deep-reverse t)) 
       t))
 
-;; (demonstrate (deep-reverse '(1 2 3 4 5)))
-;; (demonstrate (deep-reverse '(1 2 (3 4) 5 (6 (7 8) 9) 10)))
-;; (demonstrate (deep-reverse '(1 2 (3 4) ( 5 6 7) 8 9 10)))
+(demonstrate (deep-reverse '(1 2 3 4 5)))
+(demonstrate (deep-reverse '(1 2 (3 4) 5 (6 (7 8) 9) 10)))
+(demonstrate (deep-reverse '(1 2 (3 4) ( 5 6 7) 8 9 10)))
 
 ;; 2.2.3 Sequences as Conventional Interfaces
 ;; Abstraction provides ways to design systems without needing to 
@@ -83,8 +91,9 @@
         (else  (filter predicate 
                        (cdr sequence)))))
 
-(demonstrate (filter odd? (list 1 2 3 4 5)))
-(demonstrate (filter even? (list 1 2 3 4 5)))
+;; (demonstrate (filter odd? (list 1 2 3 4 5)))
+;; (demonstrate (filter even? (list 1 2 3 4 5)))
+;; (demonstrate (filter even? (list 1 3 5)))
 
 ;; ACCUMULATION
 
@@ -96,9 +105,9 @@
                     initial 
                     (cdr sequence)))))
 
-(demonstrate(accumulate + 0 (list 1 2 3 4 5)))
-(demonstrate(accumulate * 1 (list 1 2 3 4 5)))
-(demonstrate(accumulate cons nil (list 1 2 3 4 5)))
+;; (demonstrate(accumulate + 0 (list 1 2 3 4 5)))
+;; (demonstrate(accumulate * 1 (list 1 2 3 4 5)))
+;; (demonstrate(accumulate cons nil (list 1 2 3 4 5)))
 
 ;; ENUMERATION
 
@@ -112,6 +121,7 @@
 
 
 (demonstrate (enumerate-interval 2 7))
+
 
 ;; Suppose we have a sequence of personnel records and we want to find 
 ;; the salary of the highest-paid programmer. Assume that we have a selector 
@@ -127,3 +137,4 @@
     0
     (map salary
          (filter programmer? records))))
+
