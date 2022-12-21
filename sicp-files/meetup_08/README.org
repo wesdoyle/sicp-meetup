@@ -1,0 +1,173 @@
+#+title: Meetup 8
+
+* 2.3 Symbolic Data
+** 2.3.1 Quotation
+We're introduced to the notion of quotation. Quotation allows us to identify lists and symbols as data objects rather than as expressions to be evaluated. An object is quoted using a single quote ='=.
+
+The book has a great example that relates the concept to English:
+
+If you tell someone "Say your name", you'd expect them to tell you what their name is.
+If you tell them instead "Say 'your name'", you'd expect them to say "your name", verbatim.
+
+Quoting a lisp expression is like quoting "your name".
+
+An example showing how quoting allows us to differentiate between a symbol and its value:
+
+#+begin_src scheme :results output
+(define a 1)
+(define b 2)
+
+(display (list a b))
+;; => (1 2)
+(newline)
+
+(display (list 'a 'b))
+;; => (a b)
+(newline)
+
+(display (list 'a b))
+;; => (a 2)
+#+end_src
+
+#+RESULTS:
+: (1 2)
+: (a b)
+: (a 2)
+
+Lists can be quoted too:
+
+#+begin_src scheme :results output
+(display (car '(a b c)))
+;; => a
+(newline)
+
+(display (cdr '(a b c)))
+;; => (b c)
+#+end_src
+
+#+RESULTS:
+: a
+: (b c)
+
+We came across the concept of nil/the empty list earlier in the book. Most modern Schemes no longer provide =nil=, so we had to use ='()=. Hopefully now that we've seen quotation, it's clear how that represents the empty list.
+
+The =eq?= primitive lets us compare symbols for equality:
+
+#+begin_src scheme :results output
+(display (eq? 'a 'a))
+;; => #t (true)
+(newline)
+
+(display (eq? 'a 'b))
+;; => #f (false)
+(newline)
+
+(display (eq? 'a 42))
+;; => #f (false)
+(newline)
+#+end_src
+
+#+RESULTS:
+: #t
+: #f
+: #f
+
+We're given the definition of an example procedure, =memq=, which uses =eq?=. It takes a symbol and a list, then returns =#f= (false) if the symbol is not contained in the list, or a sublist starting with the first occurrence of the given symbol:
+
+#+begin_src scheme :results output
+(define (memq item x)
+  (cond ((null? x) #f) ;; x is empty; item's not there
+        ((eq? item (car x)) x) ;; special sauce of memq: eq?. the car of the list is item, so return the list
+        (else (memq item (cdr x))))) ;; first element of x is not item, so check the rest of the list
+
+(display (memq 'apple '(pear banana prune)))
+;; => #f (false)
+(newline)
+
+(display (memq 'apple '(x (apple sauce) y apple pear)))
+;; => (apple pear)
+#+end_src
+
+#+RESULTS:
+: #f
+: (apple pear)
+
+
+** The =quote= Special Form
+The single quote used for quotation is actually just syntax sugar for the =quote= special form. For example, =(quote (1 2 3))= and ='(1 2 3)= are equivalent. Though this isn't explained explicitly in the book, it comes up in the solution to exercise 2.55.
+
+** Exercises
+
+*** 2.53
+
+#+begin_quote
+What would the interpreter print in response to evaluating each of the following expressions?
+#+end_quote
+
+#+begin_src scheme
+(list 'a 'b 'c)
+;; => (a b c)
+
+(list (list 'george))
+;; => ((george))
+
+(cdr '((x1 x2) (y1 y2)))
+;; => ((y1 y2))
+
+(cadr '((x1 x2) (y1 y2)))
+;; => (y1 y2)
+
+(pair? (car '(a short list)))
+;; => #f
+
+(memq 'red '((red shoes) (blue socks)))
+;; => #f
+
+(memq 'red '(red shoes blue socks))
+;; => (red shoes blue socks)
+#+end_src
+
+*** 2.54
+
+#+begin_quote
+Two lists are said to be equal? if they contain equal elements arranged in the same order. For example,
+
+(equal? '(this is a list)
+        '(this is a list))
+
+is true, but
+
+(equal? '(this is a list)
+        '(this (is a) list))
+
+is false. To be more precise, we can define equal? recursively in terms of the basic eq? equality of symbols by saying that a and b are equal? if they are both symbols and the symbols are eq?, or if they are both lists such that (car a) is equal? to (car b) and (cdr a) is equal? to (cdr b). Using this idea, implement equal? as a procedure.
+#+end_quote
+
+#+begin_src scheme
+(define (our-equal? x y) ;; equal? is built in, so avoid shadowing it
+  (cond ((and (null? x) (null? y)) #t)
+        ((or (null? x) (null? y)) #f)
+        ((and (pair? (car x)) (pair? (car y))) (and (our-equal? (car x) (car y))
+                                                   (our-equal? (cdr x) (cdr y))))
+        (else (and (eq? (car x) (car y))
+                   (our-equal? (cdr x) (cdr y))))))
+
+(our-equal? '(this is a list)
+            '(this is a list))
+;; => #t
+
+(equal? '(this is a list)
+        '(this (is a) list))
+;; => #f
+#+end_src
+
+*** 2.55
+#+begin_quote
+Eva Lu Ator types to the interpreter the expression
+
+(car ''abracadabra)
+
+To her surprise, the interpreter prints back quote. Explain.
+#+end_quote
+
+The single quote is syntax sugar for the =quote= special form. If we de-sugar the quotation of =abracadabra= (but not the first quote), we can see that we get a list whose first element is the symbol =quote=: ='(quote abracadabra)=. The quotation of =abracadabra= is, itself, quoted, so =(quote (quote abracadabra))= is the full expansion.
