@@ -93,12 +93,11 @@ We're given the definition of an example procedure, =memq=, which uses =eq?=. It
 : (apple pear)
 
 
-** The =quote= Special Form
+*** The =quote= Special Form
 The single quote used for quotation is actually just syntax sugar for the =quote= special form. For example, =(quote (1 2 3))= and ='(1 2 3)= are equivalent. Though this isn't explained explicitly in the book, it comes up in the solution to exercise 2.55.
 
-** Exercises
-
-*** 2.53
+*** Exercises
+**** 2.53
 
 #+begin_quote
 What would the interpreter print in response to evaluating each of the following expressions?
@@ -127,7 +126,7 @@ What would the interpreter print in response to evaluating each of the following
 ;; => (red shoes blue socks)
 #+end_src
 
-*** 2.54
+**** 2.54
 
 #+begin_quote
 Two lists are said to be equal? if they contain equal elements arranged in the same order. For example,
@@ -161,7 +160,7 @@ is false. To be more precise, we can define equal? recursively in terms of the b
 ;; => #f
 #+end_src
 
-*** 2.55
+**** 2.55
 #+begin_quote
 Eva Lu Ator types to the interpreter the expression
 
@@ -171,3 +170,180 @@ To her surprise, the interpreter prints back quote. Explain.
 #+end_quote
 
 The single quote is syntax sugar for the =quote= special form. If we de-sugar the quotation of =abracadabra= (but not the first quote), we can see that we get a list whose first element is the symbol =quote=: ='(quote abracadabra)=. The quotation of =abracadabra= is, itself, quoted, so =(quote (quote abracadabra))= is the full expansion.
+** 2.3.2 Example: Symbolic Differentiation
+#+begin_src scheme :results output
+(define (variable? e)
+  "Is e a variable?"
+  (symbol? e))
+
+(define (same-variable? v1 v2)
+  "Are v1 and v2 the same variable?"
+  (and (symbol? v1) (symbol? v2) (eq? v1 v2)))
+
+(define (sum? e)
+  "Is e a sum?"
+  (and (pair? e) (eq? (car e) '+)))
+
+(define (addend e)
+  "Addend of the sum e."
+  (cadr e))
+
+(define (augend e)
+  "Augend of the sum e."
+  (caddr e))
+
+(define (make-sum a1 a2)
+  "Construct the sum of a1 and a2."
+  (list '+ a1 a2))
+
+(define (product? e)
+  "Is e a product?"
+  (and (pair? e) (eq? (car e) '*)))
+
+(define (multiplier e)
+  "Multiplier of the product e."
+  (cadr e))
+
+(define (multiplicand e)
+  "Multiplicand of the product e."
+  (caddr e))
+
+(define (make-product m1 m2)
+  "Construct the product of m1 and m2."
+  (list '* m1 m2))
+
+(define (deriv exp var)
+  (cond ((number? exp) 0)
+        ((variable? exp)
+         (if (same-variable? exp var) 1 0))
+        ((sum? exp)
+         (make-sum (deriv (addend exp) var)
+                   (deriv (augend exp) var)))
+        ((product? exp)
+         (make-sum
+          (make-product
+           (multiplier exp)
+           (deriv (multiplicand exp) var))
+          (make-product
+           (deriv (multiplier exp) var)
+           (multiplicand exp))))
+        (else (error "unknown expression
+                      type: DERIV" exp))))
+
+(display (deriv '(+ x 3) 'x))
+;; (+ 1 0)
+(newline)
+
+(display (deriv '(* x y) 'x))
+;; (+ (* x 0) (* 1 y))
+(newline)
+
+(display (deriv '(* (* x y) (+ x 3)) 'x))
+;; (+ (* (* x y) (+ 1 0))
+;;    (* (+ (* x 0) (* 1 y))
+;;       (+  x 3)))
+#+end_src
+
+#+RESULTS:
+: (+ 1 0)
+: (+ (* x 0) (* 1 y))
+: (+ (* (* x y) (+ 1 0)) (* (+ (* x 0) (* 1 y)) (+ x 3)))
+
+#+begin_src scheme :results output
+(define (variable? e)
+  "Is e a variable?"
+  (symbol? e))
+
+(define (same-variable? v1 v2)
+  "Are v1 and v2 the same variable?"
+  (and (symbol? v1) (symbol? v2) (eq? v1 v2)))
+
+(define (sum? e)
+  "Is e a sum?"
+  (and (pair? e) (eq? (car e) '+)))
+
+(define (addend e)
+  "Addend of the sum e."
+  (cadr e))
+
+(define (augend e)
+  "Augend of the sum e."
+  (caddr e))
+
+(define (=number? exp num)
+  (and (number? exp) (= exp num)))
+
+;; (define (make-sum a1 a2)
+;;   (list '+ a1 a2))
+;; Updated example which simplifies the sum
+(define (make-sum a1 a2)
+  "Construct the sum of a1 and a2."
+  (cond ((=number? a1 0) a2)
+        ((=number? a2 0) a1)
+        ((and (number? a1) (number? a2))
+         (+ a1 a2))
+        (else (list '+ a1 a2))))
+
+(define (product? e)
+  "Is e a product?"
+  (and (pair? e) (eq? (car e) '*)))
+
+(define (multiplier e)
+  "Multiplier of the product e."
+  (cadr e))
+
+(define (multiplicand e)
+  "Multiplicand of the product e."
+  (caddr e))
+
+;; (define (make-product m1 m2)
+;;   "Construct the product of m1 and m2."
+;;   (list '* m1 m2))
+;; Updated example which simplifies the product
+
+(define (make-product m1 m2)
+  (cond ((or (=number? m1 0)
+             (=number? m2 0))
+         0)
+        ((=number? m1 1) m2)
+        ((=number? m2 1) m1)
+        ((and (number? m1) (number? m2))
+         (* m1 m2))
+        (else (list '* m1 m2))))
+
+(define (deriv exp var)
+  (cond ((number? exp) 0)
+        ((variable? exp)
+         (if (same-variable? exp var) 1 0))
+        ((sum? exp)
+         (make-sum (deriv (addend exp) var)
+                   (deriv (augend exp) var)))
+        ((product? exp)
+         (make-sum
+          (make-product
+           (multiplier exp)
+           (deriv (multiplicand exp) var))
+          (make-product
+           (deriv (multiplier exp) var)
+           (multiplicand exp))))
+        (else (error "unknown expression
+                      type: DERIV" exp))))
+(display (deriv '(+ x 3) 'x))
+;; => 1
+(newline)
+
+(display (deriv '(* x y) 'x))
+;; => y
+(newline)
+
+(display (deriv '(* (* x y) (+ x 3)) 'x))
+;; => (+ (* x y) (* y (+ x 3)))
+#+end_src
+
+#+RESULTS:
+: 1
+: y
+: (+ (* x y) (* y (+ x 3)))
+
+*** Exercises
+(see exercises.scm in this directory)
